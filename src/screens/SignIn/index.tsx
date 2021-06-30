@@ -2,8 +2,10 @@ import React from 'react';
 import { View, Text, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-import { ButtonIcon } from '../../components/ButtonIcon';
 import IllustrationImg from '../../assets/illustration.png';
+
+import { ButtonIcon } from '../../components/ButtonIcon';
+import { Background } from '../../components/Background';
 
 import { styles } from './styles';
 
@@ -14,26 +16,28 @@ export function SignIn() {
         navigation.navigate('Home');
     }
     return (
-        <View style={styles.container}>
-            
-            <Image source={IllustrationImg} style={styles.image} resizeMode="stretch"/>
+        <Background>
+            <View style={styles.container}>
+                
+                <Image source={IllustrationImg} style={styles.image} resizeMode="stretch"/>
 
-            <View style={styles.content}>
-                <Text style={styles.title}>
-               Connect and organize {'\n'}
-                your games
-                </Text>
+                <View style={styles.content}>
+                    <Text style={styles.title}>
+                Connect and organize {'\n'}
+                    your games
+                    </Text>
 
-                <Text style={styles.subtitle}>
-                    Create groups to play your favorite {'\n'}
-                    games with your friends
-                 </Text>
+                    <Text style={styles.subtitle}>
+                        Create groups to play your favorite {'\n'}
+                        games with your friends
+                    </Text>
 
-                <ButtonIcon 
-                    title="Enter with Discord"
-                    onPress={handleSignIn}
-                />
+                    <ButtonIcon 
+                        title="Enter with Discord"
+                        onPress={handleSignIn}
+                        />
+                </View>
             </View>
-        </View>
+        </Background>
     );
 }
