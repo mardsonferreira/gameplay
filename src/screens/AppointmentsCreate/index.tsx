@@ -30,8 +30,16 @@ export function AppointmentsCreate() {
     const [openGuildsModal, setOpenGuildsModal] = useState(false);
     const [guild, setGuild] = useState<GuildProps>({} as GuildProps);
 
+    function handleCategorySelected(categoryId: string) {
+        setCategory(categoryId);
+    }
+
     function handleOpenGuilds() {
         setOpenGuildsModal(true);
+    }
+
+    function handleCloseGuilds() {
+        setOpenGuildsModal(false);
     }
 
     function handleGuildSelect(guildSelect: GuildProps) {
@@ -44,8 +52,8 @@ export function AppointmentsCreate() {
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={styles.container}
         >
-            <ScrollView>
-                <Background>
+            <Background>
+                <ScrollView>
                     <Header title="Schedule match" />
 
                     <View style={styles.category}>
@@ -55,7 +63,7 @@ export function AppointmentsCreate() {
                     <CategorySelect 
                         hasCheckBox
                         categorySelected={category}
-                        setCategory={setCategory}
+                        setCategory={handleCategorySelected}
                     />
 
                     <View style={styles.form}>
@@ -76,7 +84,9 @@ export function AppointmentsCreate() {
                         
                         <View style={styles.field}>
                             <View>
-                                <Text style={styles.label}>Day and Month</Text>
+                                <Text style={[styles.label, {marginBottom: 12}]}>
+                                    Day and Month
+                                </Text>
 
                                 <View style={styles.column}>
                                     <SmallInput maxLength={2} />
@@ -86,7 +96,9 @@ export function AppointmentsCreate() {
                             </View>
 
                             <View>
-                                <Text style={styles.label}>Hour and Minute</Text>
+                                <Text style={[styles.label, {marginBottom: 12}]}>
+                                    Hour and Minute
+                                </Text>
 
                                 <View style={styles.column}>
                                     <SmallInput maxLength={2} />
@@ -112,10 +124,10 @@ export function AppointmentsCreate() {
                             <Button title="Schedule"/>
                         </View>
                     </View>
-                </Background>
-            </ScrollView>
+                </ScrollView>
+            </Background>
 
-            <ModalView visible={openGuildsModal}>
+            <ModalView visible={openGuildsModal} closeModal={handleCloseGuilds}>
                 <Guilds handleGuildSelect={handleGuildSelect} />
             </ModalView>
         </KeyboardAvoidingView>

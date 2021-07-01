@@ -68,20 +68,20 @@ export function Home() {
                 setCategory={handleCategorySelected}
             />
 
-            <View style={styles.content}>
-                <ListHeader title="Scheduled games" subtitle="Total 6" />
+            
+            <ListHeader title="Scheduled games" subtitle="Total 6" />
 
-                <FlatList
-                    data={appointments}
-                    keyExtractor={item => item.id}
-                    renderItem={({item}) => (
-                        <Appointment data={item} onPress={handleAppointmentsDetails} />
-                    )}
-                    ItemSeparatorComponent={() => <ListDivider />}
-                    showsVerticalScrollIndicator={false}
-                    style={styles.matches}
-                />
-            </View>
+            <FlatList
+                data={appointments}
+                keyExtractor={item => item.id}
+                renderItem={({item}) => (
+                    <Appointment data={item} onPress={handleAppointmentsDetails} />
+                )}
+                ItemSeparatorComponent={() => <ListDivider />}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{ paddingBottom: 69 }}
+                style={styles.matches}
+            />
         </Background>
     );
 }
