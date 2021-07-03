@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, Alert } from 'react-native';
+import { View, Text, Image, Alert, ActivityIndicator } from 'react-native';
 
 import { useAuth } from '../../hooks/auth';
 
@@ -9,9 +9,10 @@ import { ButtonIcon } from '../../components/ButtonIcon';
 import { Background } from '../../components/Background';
 
 import { styles } from './styles';
+import { theme } from '../../global/styles/theme';
 
 export function SignIn() {
-    const { user, singIn } = useAuth();
+    const { loading, singIn } = useAuth();
 
     async function handleSignIn() {
         try {
@@ -37,10 +38,12 @@ export function SignIn() {
                         games with your friends
                     </Text>
 
-                    <ButtonIcon 
-                        title="Enter with Discord"
-                        onPress={handleSignIn}
+                    {   loading ? <ActivityIndicator color={theme.colors.primary} /> :
+                        <ButtonIcon 
+                            title="Enter with Discord"
+                            onPress={handleSignIn}
                         />
+                    }
                 </View>
             </View>
         </Background>

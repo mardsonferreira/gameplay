@@ -13,7 +13,7 @@ import { api } from '../services/api';
 type User = {
     id: string;
     username: string;
-    firstname: string;
+    firstName: string;
     avatar: string;
     email: string;
     token: string;
@@ -21,11 +21,18 @@ type User = {
 
 type AuthContextData = {
     user: User;
+    loading: boolean;
     singIn: () => Promise<void>;
 }
 
 type AuthProviderProps = {
     children: ReactNode;
+}
+
+type AuthorizationResponse = AuthSession.AuthSessionResult & {
+    params: {
+        access_token: string;
+    }
 }
 
 export const AuthContext = createContext({} as AuthContextData);
@@ -40,11 +47,29 @@ function AuthProvider({children}: AuthProviderProps) {
         try {
             setLoading(true);
 
-            const response = await AuthSession.startAsync({ authUrl });
+            const { type, params} = await AuthSession.startAsync({ authUrl }) as AuthorizationResponse;
 
-            console.log(response);
+            if (type === 'success') {
+                api.defaults.headers.authorization = `Bearer ${params.access_token}`;
+
+                const userInfo = await api.get('/users/@me');
+
+                const firstName =  userInfo.data.username.split(' ')[0];
+                userInfo.data.avatar = `${CDN_IMAGE}/avatars/${userInfo.data.id}/${userInfo.data.avatar}.png`;
+                
+                setUser({
+                    ...userInfo.data,
+                    firstName,
+                    token: params.access_token,
+                });
+
+                setLoading(false);
+            } else {
+                setLoading(false);
+            }
             
         } catch{
+            setLoading(false);
            throw new Error("Authentication Failed"); 
         }
     }
@@ -52,6 +77,7 @@ function AuthProvider({children}: AuthProviderProps) {
     return (
         <AuthContext.Provider value={{
             user,
+            loading,
             singIn,
         }}>
             { children }
