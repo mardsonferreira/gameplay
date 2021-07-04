@@ -15,7 +15,7 @@ const { CDN_IMAGE } = process.env;
 const { REDIRECT_URI } = process.env;
 const { RESPONSE_TYPE } = process.env;
 
-import { COLLECTION_USERS } from '../configs/database';
+import { COLLECTION_APPOINTMENTS, COLLECTION_USERS } from '../configs/database';
 
 import { api } from '../services/api';
 
@@ -31,7 +31,8 @@ type User = {
 type AuthContextData = {
     user: User;
     loading: boolean;
-    singIn: () => Promise<void>;
+    signIn: () => Promise<void>;
+    signOut: () => Promise<void>;
 }
 
 type AuthProviderProps = {
@@ -53,7 +54,7 @@ function AuthProvider({children}: AuthProviderProps) {
 
     const authUrl = `${api.defaults.baseURL}/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPE}`;
 
-    async function singIn() {
+    async function signIn() {
         try {
             setLoading(true);
 
@@ -84,6 +85,12 @@ function AuthProvider({children}: AuthProviderProps) {
         }
     }
 
+    async function signOut() {
+        setUser({} as User);
+        await AsyncStorage.removeItem(COLLECTION_USERS);
+        await AsyncStorage.removeItem(COLLECTION_APPOINTMENTS);
+    }
+
     async function loadStorageData() {
         const storage = await AsyncStorage.getItem(COLLECTION_USERS);
 
@@ -103,7 +110,8 @@ function AuthProvider({children}: AuthProviderProps) {
         <AuthContext.Provider value={{
             user,
             loading,
-            singIn,
+            signIn,
+            signOut,
         }}>
             { children }
         </AuthContext.Provider>
